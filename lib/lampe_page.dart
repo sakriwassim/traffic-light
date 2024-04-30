@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+import 'lampe_module.dart';
 import 'main.dart';
 
 class LampePage extends StatefulWidget {
@@ -43,8 +45,8 @@ class _LampePageState extends State<LampePage> {
           ElevatedButton(onPressed: () {
             createLampe(
                 address: controlleraddress.text.trim(),
-                latitude: double.parse(controllerlatitude.text.trim()),
-                longitude: double.parse(controllerlongitude.text.trim()), status: '0');
+                latitude: controllerlatitude.text.trim(),
+                longitude: controllerlongitude.text.trim(), status: '0');
             Navigator.pop(context);
           }, child: Text("Create"))
         ],
@@ -60,19 +62,19 @@ class _LampePageState extends State<LampePage> {
   }
 
   Future createLampe({required String address, required String status,
-    required double latitude,
-    required double longitude}) async {
-    final docLampe = FirebaseFirestore.instance.collection('lampe').doc();
+    required String latitude,
+    required String longitude}) async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("lampes");
 
     final lampe = Lampe(
-        id: docLampe.id,
+        id: "ss",
         address: address,
         latitude: latitude,
         longitude: longitude,
         status: status);
 
     final lampejson = lampe.toJson();
-    await docLampe.set(lampejson);
+    await ref.push().set(lampejson);
   }
 }
 

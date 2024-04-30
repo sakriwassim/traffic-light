@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:hospital_car/lampe_page.dart';
 import 'firebase_options.dart';
 import 'lampe_details_screen.dart';
+import 'lampe_module.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,7 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
             .colorScheme
             .inversePrimary,
         title: Text("Hospital Car"),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.add))],
       ),
       body: Center(
           child: StreamBuilder<List<Lampe>>(
@@ -105,52 +105,37 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
 
-  Future<Lampe?> readLampeById({required String id}) async {
-    final doclampe = FirebaseFirestore.instance.collection('lampe').doc(id);
-    final snapshot = await doclampe.get();
-    if (snapshot.exists) {
-      return Lampe.fromJson(snapshot.data()!);
-    }
-  }
+  // Future<Lampe?> readLampeById({required String id}) async {
+  //   final doclampe = FirebaseFirestore.instance.collection('lampe').doc(id);
+  //   final snapshot = await doclampe.get();
+  //   if (snapshot.exists) {
+  //     return Lampe.fromJson(snapshot.data()!);
+  //   }
+  // }
+
+  // Stream<List<Lampe>> readLampes() {
+  //  return FirebaseFirestore.instance.collection('lampe')
+  //       .snapshots()
+  //       .map((snapshot)=>snapshot.docs.map((doc)=> Lampe.fromJson(doc.data())).toList());
+  // }
+
+
 
   Stream<List<Lampe>> readLampes() {
-   return FirebaseFirestore.instance.collection('lampe')
-        .snapshots()
-        .map((snapshot)=>snapshot.docs.map((doc)=> Lampe.fromJson(doc.data())).toList());
+    final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref("lampes");
+
+    return _databaseReference.onValue.map((event) {
+      final data = event.snapshot.value as Map<dynamic, dynamic>;
+      if (data == null) return [];
+      return data.entries.map((entry) {
+        final key = entry.key as String;
+        final value = entry.value as Map<dynamic, dynamic>;
+        return Lampe.fromJson({...value, 'id': key});
+      }).toList();
+    });
   }
-}
 
 
 
 
-class Lampe {
-  String id;
-  String address;
-  double latitude;
-  double longitude;
-  String status;
-
-  Lampe({required this.id,
-    required this.address,
-    required this.longitude,
-    required this.latitude,
-    required this.status
-  });
-
-  Map<String, dynamic> toJson() =>
-      {
-        "id": id,
-        "address": address,
-        "latitude": latitude,
-        "longitude": longitude,
-        "status": status
-      };
-
-  static Lampe fromJson(Map<String, dynamic> json) {
-    return Lampe(id: json["id"],
-        address: json["address"],
-        longitude: json["longitude"],
-        latitude: json["latitude"],
-        status: json["status"]);
-  }
 }

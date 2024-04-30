@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-import 'main.dart';
+import 'lampe_module.dart';
 
 class LampeDetailsScreen extends StatelessWidget {
   Lampe lampe;
@@ -36,32 +38,30 @@ class LampeDetailsScreen extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Wrap(
               children: [
                 ElevatedButton(
                     onPressed: () {
-                      final docLampe = FirebaseFirestore.instance
-                          .collection('lampe')
-                          .doc(lampe.id);
-                      docLampe.update(Lampe(
-                              id: lampe.id,
-                              address: lampe.id,
-                              longitude: lampe.longitude,
-                              latitude: lampe.latitude,
-                              status: "0")
+                      FirebaseDatabase.instance.ref("lampes/${lampe.id}").remove();
+                    },
+                    child: Text("remove lampe")),
+                ElevatedButton(
+                    onPressed: () {
+                      FirebaseDatabase.instance.ref("lampes/${lampe.id}").update(Lampe(
+                          id: lampe.id,
+                          address: lampe.address,
+                          longitude: lampe.longitude,
+                          latitude: lampe.latitude,
+                          status: "0")
                           .toJson());
                     },
                     child: Text("rest")),
                 SizedBox(width: 20,),
                 ElevatedButton(
                     onPressed: () {
-                      final docLampe = FirebaseFirestore.instance
-                          .collection('lampe')
-                          .doc(lampe.id);
-                      docLampe.update(Lampe(
+                      FirebaseDatabase.instance.ref("lampes/${lampe.id}").update(Lampe(
                           id: lampe.id,
-                          address: lampe.id,
+                          address: lampe.address,
                           longitude: lampe.longitude,
                           latitude: lampe.latitude,
                           status: "1")
@@ -71,12 +71,9 @@ class LampeDetailsScreen extends StatelessWidget {
                 SizedBox(width: 20,),
                 ElevatedButton(
                     onPressed: () {
-                      final docLampe = FirebaseFirestore.instance
-                          .collection('lampe')
-                          .doc(lampe.id);
-                      docLampe.update(Lampe(
+                      FirebaseDatabase.instance.ref("lampes/${lampe.id}").update(Lampe(
                           id: lampe.id,
-                          address: lampe.id,
+                          address: lampe.address,
                           longitude: lampe.longitude,
                           latitude: lampe.latitude,
                           status: "2")
