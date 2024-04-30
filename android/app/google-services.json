@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "688477875278",
+    "project_id": "hospital-car-af591",
+    "storage_bucket": "hospital-car-af591.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:688477875278:android:d17bc9cb547c6e7802671f",
+        "android_client_info": {
+          "package_name": "com.example.hospital_car"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfHENvLJgzcUaadDCUATiGlrOUAOfuMXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
