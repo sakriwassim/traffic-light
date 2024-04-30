@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'lampe_module.dart';
-import 'main.dart';
 
 class LampePage extends StatefulWidget {
   const LampePage({super.key});
@@ -66,15 +64,12 @@ class _LampePageState extends State<LampePage> {
     required String longitude}) async {
     DatabaseReference ref = FirebaseDatabase.instance.ref("lampes");
 
-    final lampe = Lampe(
-        id: "ss",
+    await ref.push().set(Lampe(
+        id: ref.push().key ?? "",
         address: address,
         latitude: latitude,
         longitude: longitude,
-        status: status);
-
-    final lampejson = lampe.toJson();
-    await ref.push().set(lampejson);
+        status: status).toJson());
   }
 }
 
