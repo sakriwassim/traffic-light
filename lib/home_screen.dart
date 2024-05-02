@@ -11,7 +11,8 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreen> createState()
+  => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -30,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
           decoration: BoxDecoration(
             color: Colors.orangeAccent, //Colors.transparent,
           ),
-          height: 650,
+           height: 650,
           child: StreamBuilder<List<Lampe>>(
             stream: readLampes(),
             builder: (context, snapshot) {
@@ -48,11 +49,29 @@ class _HomeScreenState extends State<HomeScreen> {
                         double.parse(lampe.latitude),
                         double.parse(lampe.longitude),
                       ),
-                     child: Icon(
-                      Icons.place,
-                      color: Colors.green,
-                      size: 50,
-                    ),
+                     child: InkWell(
+                       onTap: () {
+                         showDialog(
+                           context: context,
+                           builder: (BuildContext context) {
+                             return AlertDialog(
+                               title: Text("Lampe Details"),
+                               content: LampeDetails(lampe: lampe),
+                             );
+                           },
+                         );
+                       },
+                       child: Icon(
+                       Icons.traffic,
+                       color: lampe.status == "0"
+                                   ? Colors.orangeAccent
+                              : lampe.status == "1"
+                                  ? Colors.green
+                                  : Colors.red,
+                          size: 50,
+                     ),
+
+                     ),
                     ),
                   );
                 }).toList();
@@ -64,13 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     FlutterMap(
                       mapController: mapController.mapController,
-                      options: MapOptions(
-                        center: LatLng(36.8152, 10.1711), // Bab Saadoun coordinates
-                        zoom: 15.0, // Adjust zoom level as needed
-                        minZoom: 15.0, // Set minZoom to the same as zoom to block zooming
-                        maxZoom: 15.0,
-                        // Set maxZoom to the same as zoom to block zooming
-                        enableScrollWheel: false, // Disable user interaction
+                      options: const MapOptions(
+                        initialCenter: LatLng(33.8869, 9.5375),
+                        initialZoom: 6.5,
+                        interactiveFlags: InteractiveFlag.none,
                       ),
                       children: [
                         TileLayer(
@@ -103,30 +119,30 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  Widget buildLampe(Lampe lampe) => InkWell(
-    onTap: () => Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => LampeDetailsScreen(
-          lampe: lampe,
-        ),
-      ),
-    ),
-    child: ListTile(
-      leading: CircleAvatar(
-        backgroundColor: lampe.status == "0"
-            ? Colors.orangeAccent
-            : lampe.status == "1"
-            ? Colors.green
-            : Colors.red,
-        child: Text('${lampe.status}'),
-      ),
-      title: Text(lampe.address ?? ""),
-      subtitle: Text(
-          "Latitude: ${lampe.latitude}, Longitude: ${lampe.longitude}"),
-    ),
-  );
+  //
+  // Widget buildLampe(Lampe lampe) => InkWell(
+  //   onTap: () => Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => LampeDetails(
+  //         lampe: lampe,
+  //       ),
+  //     ),
+  //   ),
+  //   child: ListTile(
+  //     leading: CircleAvatar(
+  //       backgroundColor: lampe.status == "0"
+  //           ? Colors.orangeAccent
+  //           : lampe.status == "1"
+  //           ? Colors.green
+  //           : Colors.red,
+  //       child: Text('${lampe.status}'),
+  //     ),
+  //     title: Text(lampe.address ?? ""),
+  //     subtitle: Text(
+  //         "Latitude: ${lampe.latitude}, Longitude: ${lampe.longitude}"),
+  //   ),
+  // );
 
   Stream<List<Lampe>> readLampes() {
     final DatabaseReference _databaseReference =
