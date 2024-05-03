@@ -11,13 +11,10 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key});
 
   @override
-  State<HomeScreen> createState()
-  => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late List<LampteModel> lampeList = [];
-  MyMapController mapController = MyMapController();
 
   @override
   Widget build(BuildContext context) {
@@ -26,125 +23,75 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Theme.of(context).colorScheme.secondary,
         title: Text("Hospital Car"),
       ),
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.orangeAccent, //Colors.transparent,
-          ),
-           height: 650,
-          child: StreamBuilder<List<Lampe>>(
-            stream: readLampes(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text("Something went wrong! ${snapshot.error}"),
-                );
-              } else if (snapshot.hasData) {
-                final lampes = snapshot.data;
+      body: Container(
+         height: 650,
+        child: StreamBuilder<List<LampeModel>>(
+          stream: readLampes(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text("Something went wrong! ${snapshot.error}"),
+              );
+            } else if (snapshot.hasData) {
+              final lampes = snapshot.data;
 
-                lampeList = lampes!.map((lampe) {
-                  return LampteModel(
-                    marker: Marker(
-                      point: LatLng(
-                        double.parse(lampe.latitude),
-                        double.parse(lampe.longitude),
-                      ),
-                     child: InkWell(
-                       onTap: () {
-                         showDialog(
-                           context: context,
-                           builder: (BuildContext context) {
-                             return AlertDialog(
-                               title: Text("Lampe Details"),
-                               content: LampeDetails(lampe: lampe),
-                             );
-                           },
-                         );
-                       },
-                       child: Icon(
-                       Icons.traffic,
-                       color: lampe.status == "0"
-                                   ? Colors.orangeAccent
-                              : lampe.status == "1"
-                                  ? Colors.green
-                                  : Colors.red,
-                          size: 50,
-                     ),
-
-                     ),
+              List<Marker> markers = lampes!.map((lampe) {
+                return Marker(
+                  point: LatLng(
+                    double.parse(lampe.latitude),
+                    double.parse(lampe.longitude),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: LampeDetails(lampe: lampe,),
+                          );
+                        },
+                      );
+                    },
+                    child: Icon(
+                      Icons.traffic,
+                      color: lampe.status == "0"
+                          ? Colors.orangeAccent
+                          : lampe.status == "1"
+                          ? Colors.green
+                          : Colors.red,
+                      size: 50,
                     ),
-                  );
-                }).toList();
 
-                final markers =
-                lampeList.map((lampe) => lampe.marker).toList();
+                  ),
+                );
+              }).toList();
 
-                return Stack(
-                  children: [
-                    FlutterMap(
-                      mapController: mapController.mapController,
-                      options: const MapOptions(
-                        initialCenter: LatLng(33.8869, 9.5375),
-                        initialZoom: 6.5,
-                        interactiveFlags: InteractiveFlag.none,
-                      ),
-                      children: [
-                        TileLayer(
-                          urlTemplate:
-                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                          userAgentPackageName: 'com.example.app',
-                        ),
-                        MarkerLayer(markers: markers),
-                      ],
-                    ),
-                    // ListView(
-                    //   children: lampes.map(buildLampe).toList(),
-                    // ),
-                  ],
-                );
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ),
+
+              return  FlutterMap(
+                options: const MapOptions(
+                  initialCenter: LatLng(36.808721307989806, 10.159142586152463),
+                  initialZoom: 20,
+                  // interactiveFlags: InteractiveFlag.none,
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  ),
+                  MarkerLayer(markers: markers),
+                ],
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => LampePage())),
-        tooltip: 'Add Lampe',
-        child: const Icon(Icons.add),
       ),
     );
   }
-  //
-  // Widget buildLampe(Lampe lampe) => InkWell(
-  //   onTap: () => Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => LampeDetails(
-  //         lampe: lampe,
-  //       ),
-  //     ),
-  //   ),
-  //   child: ListTile(
-  //     leading: CircleAvatar(
-  //       backgroundColor: lampe.status == "0"
-  //           ? Colors.orangeAccent
-  //           : lampe.status == "1"
-  //           ? Colors.green
-  //           : Colors.red,
-  //       child: Text('${lampe.status}'),
-  //     ),
-  //     title: Text(lampe.address ?? ""),
-  //     subtitle: Text(
-  //         "Latitude: ${lampe.latitude}, Longitude: ${lampe.longitude}"),
-  //   ),
-  // );
 
-  Stream<List<Lampe>> readLampes() {
+  Stream<List<LampeModel>> readLampes() {
     final DatabaseReference _databaseReference =
     FirebaseDatabase.instance.ref("lampes");
 
@@ -154,22 +101,9 @@ class _HomeScreenState extends State<HomeScreen> {
       return data.entries.map((entry) {
         final key = entry.key as String;
         final value = entry.value as Map<dynamic, dynamic>;
-        return Lampe.fromJson({...value, 'id': key});
+        return LampeModel.fromJson({...value, 'id': key});
       }).toList();
     });
   }
 }
 
-class LampteModel {
-  final Marker marker;
-
-  LampteModel({required this.marker});
-}
-
-class MyMapController {
-  MapController mapController = MapController();
-
-  void moveTo(LatLng point, double zoom) {
-    mapController.move(point, zoom);
-  }
-}

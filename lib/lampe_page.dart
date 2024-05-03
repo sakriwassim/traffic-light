@@ -64,7 +64,7 @@ class _LampePageState extends State<LampePage> {
     required String longitude}) async {
     DatabaseReference ref = FirebaseDatabase.instance.ref("lampes");
 
-    await ref.push().set(Lampe(
+    await ref.push().set(LampeModel(
         id: ref.push().key ?? "",
         address: address,
         latitude: latitude,

@@ -1,12 +1,12 @@
 
-class Lampe {
+class LampeModel {
   String id;
   String address;
   String latitude;
   String longitude;
   String status;
 
-  Lampe({required this.id,
+  LampeModel({required this.id,
     required this.address,
     required this.longitude,
     required this.latitude,
@@ -22,8 +22,8 @@ class Lampe {
         "status": status
       };
 
-  static Lampe fromJson(Map<String, dynamic> json) {
-    return Lampe(id: json["id"],
+  static LampeModel fromJson(Map<String, dynamic> json) {
+    return LampeModel(id: json["id"],
         address: json["address"],
         longitude: json["longitude"],
         latitude: json["latitude"],

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'lampe_module.dart';
 
 class LampeDetails extends StatelessWidget {
-  Lampe lampe;
+  LampeModel lampe;
 
   LampeDetails({required this.lampe, super.key});
 
@@ -36,7 +35,7 @@ class LampeDetails extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              FirebaseDatabase.instance.ref("lampes/${lampe.id}").update(Lampe(
+              FirebaseDatabase.instance.ref("lampes/${lampe.id}").update(LampeModel(
                       id: lampe.id,
                       address: lampe.address,
                       longitude: lampe.longitude,
@@ -65,7 +64,7 @@ class LampeDetails extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              FirebaseDatabase.instance.ref("lampes/${lampe.id}").update(Lampe(
+              FirebaseDatabase.instance.ref("lampes/${lampe.id}").update(LampeModel(
                       id: lampe.id,
                       address: lampe.address,
                       longitude: lampe.longitude,
@@ -94,7 +93,8 @@ class LampeDetails extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              FirebaseDatabase.instance.ref("lampes/${lampe.id}").update(Lampe(
+
+              FirebaseDatabase.instance.ref("lampes/${lampe.id}").update(LampeModel(
                       id: lampe.id,
                       address: lampe.address,
                       longitude: lampe.longitude,
