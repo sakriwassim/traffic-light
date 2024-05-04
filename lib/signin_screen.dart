@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hospital_car/forget_password_screen.dart';
 
 import 'home_screen.dart';
+import 'login_email_verification_screen.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({Key? key}) : super(key: key);
@@ -61,11 +63,20 @@ class _SigninPageState extends State<SigninPage> {
               await FirebaseAuth.instance.signInWithEmailAndPassword(
                   email: emailController.text.trim(),
                   password: passwordController.text.trim());
-              // If sign-in is successful, navigate to home screen
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              );
+
+              if (!FirebaseAuth.instance.currentUser!.emailVerified) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => LoginEmailVerificationScreen()),
+                );
+              }else {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
+              }
+
             } catch (error) {
               showDialog(
                 context: context,
@@ -93,7 +104,7 @@ class _SigninPageState extends State<SigninPage> {
           ),
           child: const Text(
             "Login",
-            style: TextStyle(fontSize: 20),
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
         )
       ],
@@ -102,7 +113,12 @@ class _SigninPageState extends State<SigninPage> {
 
   _forgotPassword(context) {
     return TextButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ForgetPassWordScreen()),
+        );
+      },
       child: const Text(
         "Forgot password?",
         style: TextStyle(color: Colors.purple),
@@ -110,20 +126,6 @@ class _SigninPageState extends State<SigninPage> {
     );
   }
 
-  _signup(context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text("Dont have an account? "),
-        TextButton(
-            onPressed: () {},
-            child: const Text(
-              "Sign Up",
-              style: TextStyle(color: Colors.purple),
-            ))
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +138,6 @@ class _SigninPageState extends State<SigninPage> {
             _header(context),
             _inputField(context),
             _forgotPassword(context),
-            _signup(context),
           ],
         ),
       ),
