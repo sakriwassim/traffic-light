@@ -5,7 +5,6 @@ import 'package:latlong2/latlong.dart';
 
 import 'lampe_details_screen.dart';
 import 'lampe_module.dart';
-import 'lampe_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key});
@@ -23,7 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Theme.of(context).colorScheme.secondary,
         title: Text("Hospital Car"),
       ),
-      body: Container(
+      body:
+      Container(
          height: 650,
         child: StreamBuilder<List<LampeModel>>(
           stream: readLampes(),

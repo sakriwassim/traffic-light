@@ -25,6 +25,8 @@ dependencies:
   flutter_map: ^6.1.0
   latlng: any
   widget_to_marker: ^1.0.4
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
 #  scroll_snap_list: ^0.9.1
 
 dev_dependencies:
