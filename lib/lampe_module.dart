@@ -4,7 +4,7 @@ class LampeModel {
   String address;
   String latitude;
   String longitude;
-  String status;
+  int status;
 
   LampeModel({required this.id,
     required this.address,

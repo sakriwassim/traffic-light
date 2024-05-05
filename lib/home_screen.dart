@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             address: lampe.address,
                                             longitude: lampe.longitude,
                                             latitude: lampe.latitude,
-                                            status: "0")
+                                            status: 0)
                                         .toJson());
                               } catch (e) {
                                 showDialog(
@@ -123,9 +123,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Icon(
                               size: 35,
                               Icons.traffic,
-                              color: lampe.status == "0"
+                              color: lampe.status == 0
                                   ? Colors.orangeAccent
-                                  : lampe.status == "1"
+                                  : lampe.status == 1
                                       ? Colors.green
                                       : Colors.red,
                             ),
@@ -142,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             address: lampe.address,
                                             longitude: lampe.longitude,
                                             latitude: lampe.latitude,
-                                            status: "2")
+                                            status: 2)
                                         .toJson());
                               } catch (e) {
                                 showDialog(
@@ -167,9 +167,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Icon(
                               size: 35,
                               Icons.refresh,
-                              color: lampe.status == "0"
+                              color: lampe.status == 0
                                   ? Colors.orangeAccent
-                                  : lampe.status == "1"
+                                  : lampe.status == 1
                                       ? Colors.green
                                       : Colors.red,
                             ),
