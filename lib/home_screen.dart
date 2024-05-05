@@ -52,8 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }
             },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Icon(
                 Icons.login,
                 color: Colors.white,
@@ -84,98 +84,49 @@ class _HomeScreenState extends State<HomeScreen> {
                     double.parse(lampe.latitude),
                     double.parse(lampe.longitude),
                   ),
-                  child: Container(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              try {
-                                FirebaseDatabase.instance
-                                    .ref("lampes/${lampe.id}")
-                                    .update(LampeModel(
-                                            id: lampe.id,
-                                            address: lampe.address,
-                                            longitude: lampe.longitude,
-                                            latitude: lampe.latitude,
-                                            status: 0)
-                                        .toJson());
-                              } catch (e) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text("Error"),
-                                      content: Text(e.toString()),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text("OK"),
-                                        ),
-                                      ],
-                                    );
+                  child: InkWell(
+                    onTap: () {
+                      try {
+                        FirebaseDatabase.instance
+                            .ref("lampes/${lampe.id}")
+                            .update(LampeModel(
+                            id: lampe.id,
+                            address: lampe.address,
+                            longitude: lampe.longitude,
+                            latitude: lampe.latitude,
+                            status: 1)
+                            .toJson());
+                        FirebaseDatabase.instance
+                            .ref("/")
+                            .update({"rest": 0});
+                      } catch (e) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Error"),
+                              content: Text(e.toString()),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
                                   },
-                                );
-                              }
-                            },
-                            child: Icon(
-                              size: 35,
-                              Icons.traffic,
-                              color: lampe.status == 0
-                                  ? Colors.orangeAccent
-                                  : lampe.status == 1
-                                      ? Colors.green
-                                      : Colors.red,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              try {
-                                FirebaseDatabase.instance
-                                    .ref("lampes/${lampe.id}")
-                                    .update(LampeModel(
-                                            id: lampe.id,
-                                            address: lampe.address,
-                                            longitude: lampe.longitude,
-                                            latitude: lampe.latitude,
-                                            status: 2)
-                                        .toJson());
-                              } catch (e) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text("Error"),
-                                      content: Text(e.toString()),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text("OK"),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                            child: Icon(
-                              size: 35,
-                              Icons.refresh,
-                              color: lampe.status == 0
-                                  ? Colors.orangeAccent
-                                  : lampe.status == 1
-                                      ? Colors.green
-                                      : Colors.red,
-                            ),
-                          ),
-                        )
-                      ],
+                                  child: Text("OK"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
+                    child: Icon(
+                      size: 35,
+                      Icons.traffic,
+                      color: lampe.status == 0
+                          ? Colors.black
+                          : lampe.status == 1
+                          ? Colors.green
+                          : Colors.black,
                     ),
                   ),
                 );
@@ -206,8 +157,53 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          try {
+            FirebaseDatabase.instance
+                .ref("/")
+                .update({"rest": 1});
+    } catch (e) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Error"),
+                  content: Text(e.toString()),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("OK"),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        },
+        child: Icon(
+          size: 50,
+          Icons.refresh,),
+      ),
     );
   }
+
+  void updateAllLampsStateToZero() async {
+    final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref("lampes");
+    try {
+      await _databaseReference.update({
+        "~": {"state": 0},
+      });
+      print("All lamp states updated successfully!");
+    } catch (error) {
+      print("Error updating lamp states: $error");
+    }
+  }
+
+
 
   Stream<List<LampeModel>> readLampes() {
     final DatabaseReference _databaseReference =
