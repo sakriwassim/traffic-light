@@ -21,8 +21,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple,
-        title: Text("Hospital Car",
-            style: TextStyle(color: Colors.white, fontSize: 20),),
+        title: const Text(
+          "Hospital Car",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
         actions: [
           InkWell(
             onTap: () async {
@@ -37,14 +39,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text("Error"),
+                      title: const Text("Error"),
                       content: Text(error.toString()),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text("OK"),
+                          child: const Text("OK"),
                         ),
                       ],
                     );
@@ -63,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Container(
+      body: SizedBox(
         height: double.infinity,
         width: double.infinity,
         child: StreamBuilder<List<LampeModel>>(
@@ -90,28 +92,26 @@ class _HomeScreenState extends State<HomeScreen> {
                         FirebaseDatabase.instance
                             .ref("lampes/${lampe.id}")
                             .update(LampeModel(
-                            id: lampe.id,
-                            address: lampe.address,
-                            longitude: lampe.longitude,
-                            latitude: lampe.latitude,
-                            status: 1)
-                            .toJson());
-                        FirebaseDatabase.instance
-                            .ref("/")
-                            .update({"rest": 0});
+                                    id: lampe.id,
+                                    address: lampe.address,
+                                    longitude: lampe.longitude,
+                                    latitude: lampe.latitude,
+                                    status: 1)
+                                .toJson());
+                        FirebaseDatabase.instance.ref("/").update({"rest": 0});
                       } catch (e) {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("Error"),
+                              title: const Text("Error"),
                               content: Text(e.toString()),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text("OK"),
+                                  child: const Text("OK"),
                                 ),
                               ],
                             );
@@ -125,19 +125,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: lampe.status == 0
                           ? Colors.black
                           : lampe.status == 1
-                          ? Colors.green
-                          : Colors.black,
+                              ? Colors.green
+                              : Colors.black,
                     ),
                   ),
                 );
               }).toList();
 
               return FlutterMap(
-                options:  MapOptions(
-                  initialCenter: LatLng(36.808557,10.159067),
+                options: MapOptions(
+                  initialCenter: const LatLng(36.808557, 10.159067),
                   initialZoom: 18.84306149436319,
                   onPositionChanged: (mapPosition, _) {
-                    print("${mapPosition.zoom.toString()}"); // Update the current position
+                    print(
+                        "${mapPosition.zoom.toString()}"); // Update the current position
                   },
                   interactiveFlags: InteractiveFlag.none,
                 ),
@@ -150,33 +151,31 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               );
             } else {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             }
           },
         ),
       ),
-
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           try {
-            FirebaseDatabase.instance
-                .ref("/")
-                .update({"rest": 1});
-    } catch (e) {
+            FirebaseDatabase.instance.ref("/").update({"rest": 1});
+            updateAllLampsStateToZero();
+          } catch (e) {
             showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text("Error"),
+                  title: const Text("Error"),
                   content: Text(e.toString()),
                   actions: <Widget>[
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text("OK"),
+                      child: const Text("OK"),
                     ),
                   ],
                 );
@@ -184,26 +183,26 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }
         },
-        child: Icon(
+        child: const Icon(
           size: 50,
-          Icons.refresh,),
+          Icons.refresh,
+        ),
       ),
     );
   }
 
   void updateAllLampsStateToZero() async {
-    final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref("lampes");
-    try {
-      await _databaseReference.update({
-        "~": {"state": 0},
-      });
-      print("All lamp states updated successfully!");
-    } catch (error) {
-      print("Error updating lamp states: $error");
+    DatabaseReference lampRef = FirebaseDatabase.instance.ref("lampes");
+    List<String> floors;
+    final snapshot = await lampRef.once();
+    if (snapshot.snapshot.value == null) return ;
+    floors = snapshot.snapshot.children.map((child) => child.key as String).toList();
+    for (String floor in floors) {
+      await FirebaseDatabase.instance
+          .ref("lampes/$floor")
+          .update({"status": 0});
     }
   }
-
-
 
   Stream<List<LampeModel>> readLampes() {
     final DatabaseReference _databaseReference =

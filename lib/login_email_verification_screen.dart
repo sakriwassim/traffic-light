@@ -29,7 +29,7 @@ class _LoginEmailVerificationScreenState
       sendVerificationEmail();
     }
     timer =
-        Timer.periodic(Duration(seconds: 3), (Timer t) => checkEmailVerified());
+        Timer.periodic(const Duration(seconds: 3), (Timer t) => checkEmailVerified());
   }
 
   @override
@@ -61,7 +61,7 @@ class _LoginEmailVerificationScreenState
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _header(context),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 const SizedBox(height: 8),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -75,7 +75,7 @@ class _LoginEmailVerificationScreenState
                 ),
                 const SizedBox(height: 16),
                 const SizedBox(height: 8),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 32.0),
                   child: Center(
                     child: Text(
@@ -86,7 +86,7 @@ class _LoginEmailVerificationScreenState
                   ),
                 ),
                 const SizedBox(height: 10),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 32.0),
                   child: Center(
                     child: Text(
@@ -115,10 +115,10 @@ class _LoginEmailVerificationScreenState
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       backgroundColor: Colors.purple,
                     ),
-                    child: Container(
+                    child: const SizedBox(
                       width: double.infinity,
                       child: Center(
-                        child: const Text(
+                        child: Text(
                           "Resend",
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
@@ -139,10 +139,10 @@ class _LoginEmailVerificationScreenState
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: Colors.purple,
                       ),
-                      child: Container(
+                      child: const SizedBox(
                         width: double.infinity,
                         child: Center(
-                          child: const Text(
+                          child: Text(
                             "Back",
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
@@ -162,7 +162,7 @@ class _LoginEmailVerificationScreenState
       final user = FirebaseAuth.instance.currentUser!;
       await user.sendEmailVerification();
       setState(() => canResendEmail = false);
-      await Future.delayed(Duration(seconds: 5));
+      await Future.delayed(const Duration(seconds: 5));
       setState(() => canResendEmail = true);
     } catch (e) {
       SnackBar(

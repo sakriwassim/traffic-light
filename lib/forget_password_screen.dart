@@ -68,14 +68,14 @@ class _ForgetPassWordScreenState extends State<ForgetPassWordScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Success"),
-            content: Text("Email de réinitialisation du mot de passe envoyé."),
+            title: const Text("Success"),
+            content: const Text("Email de réinitialisation du mot de passe envoyé."),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text("OK"),
+                child: const Text("OK"),
               ),
             ],
           );
@@ -87,14 +87,14 @@ class _ForgetPassWordScreenState extends State<ForgetPassWordScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Error"),
+            title: const Text("Error"),
             content: Text(e.message.toString()),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text("OK"),
+                child: const Text("OK"),
               ),
             ],
           );
@@ -119,17 +119,17 @@ class _ForgetPassWordScreenState extends State<ForgetPassWordScreen> {
               onPressed: () =>  Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => SigninPage()),
+                    builder: (context) => const SigninPage()),
               ),
               style: ElevatedButton.styleFrom(
                 shape: const StadiumBorder(),
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 backgroundColor: Colors.purple,
               ),
-              child: Container(
+              child: const SizedBox(
                 width: double.infinity,
                 child: Center(
-                  child: const Text(
+                  child: Text(
                     "Back",
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
