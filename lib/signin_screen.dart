@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hospital_car/forget_password_screen.dart';
 
 import 'home_screen.dart';
-import 'login_email_verification_screen.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({Key? key}) : super(key: key);
@@ -17,8 +15,8 @@ class _SigninPageState extends State<SigninPage> {
     return const Column(
       children: [
         Text(
-          "Welcome Back",
-          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+          "Feux de Circulation",
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
         Text("Enter your credential to login"),
       ],
@@ -31,18 +29,6 @@ class _SigninPageState extends State<SigninPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        TextField(
-          controller: emailController,
-          decoration: InputDecoration(
-              hintText: "Username",
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  borderSide: BorderSide.none),
-              fillColor: Colors.purple.withOpacity(0.1),
-              filled: true,
-              prefixIcon: const Icon(Icons.person)),
-        ),
-        const SizedBox(height: 10),
         TextField(
           controller: passwordController,
           decoration: InputDecoration(
@@ -61,21 +47,13 @@ class _SigninPageState extends State<SigninPage> {
           onPressed: () async {
             try {
               await FirebaseAuth.instance.signInWithEmailAndPassword(
-                  email: emailController.text.trim(),
+                  email: "admin@gmail.com",
                   password: passwordController.text.trim());
 
-              if (!FirebaseAuth.instance.currentUser!.emailVerified) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => LoginEmailVerificationScreen()),
-                );
-              }else {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
-              }
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
 
             } catch (error) {
               showDialog(
@@ -111,33 +89,17 @@ class _SigninPageState extends State<SigninPage> {
     );
   }
 
-  _forgotPassword(context) {
-    return TextButton(
-      onPressed: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => ForgetPassWordScreen()),
-        );
-      },
-      child: const Text(
-        "Forgot password?",
-        style: TextStyle(color: Colors.purple),
-      ),
-    );
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         margin: const EdgeInsets.all(24),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _header(context),
+            SizedBox(height: 40,),
             _inputField(context),
-            _forgotPassword(context),
           ],
         ),
       ),

@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:hospital_car/signin_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -27,15 +28,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             // Your splash screen content here
-            CircularProgressIndicator(),
+            SizedBox(
+                height: 100,
+                width: 100,
+                child: Image.asset("assets/images/logo.png")),
             SizedBox(height: 20),
-            Text('Loading...'),
+            Text('Feux de Circulation'),
           ],
         ),
       ),
