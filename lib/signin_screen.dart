@@ -1,16 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'home_screen.dart';
 
-class SigninPage extends StatefulWidget {
-  const SigninPage({Key? key}) : super(key: key);
+class SigninPage extends StatelessWidget {
+  const SigninPage({super.key});
 
-  @override
-  State<SigninPage> createState() => _SigninPageState();
-}
-
-class _SigninPageState extends State<SigninPage> {
   _header(context) {
     return const Column(
       children: [
@@ -24,7 +18,6 @@ class _SigninPageState extends State<SigninPage> {
   }
 
   _inputField(context) {
-    TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -56,6 +49,7 @@ class _SigninPageState extends State<SigninPage> {
               );
 
             } catch (error) {
+
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -106,3 +100,4 @@ class _SigninPageState extends State<SigninPage> {
     );
   }
 }
+
